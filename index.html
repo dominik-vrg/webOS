@@ -1,33 +1,48 @@
 <!DOCTYPE html>
 
-<html>
-    <head>
-        <link rel="stylesheet" href="style.css">
-    </head>
+<html lang = "en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainrot OS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
+<body>
 
-    <body>
+    <div class = "os-container">
 
-        <div class = "os-container">
+        <nav class = "top-bar">
 
-            <nav class = "top-bar">
+            <div class = "start-button">System failure!</div>
+            <div class = "clock">currentTime</div>
+            <div class = "status">Brainrot OS</div>
 
-                <div class = "start-button">System failure!</div>
-                <div class = "clock">00:00:00</div>
-                <div class = "status">BrainrotOS</div>
-
-            </nav>
+        </nav>
             
-            <main>
+        <main class="desktop">
 
-                <div class = "icon">MEMES</div>
-                <div class = "icon">NOTES</div>
-                <div class = "icon">brainrot.exe</div>
+            <div class = "icon">
+                <img src="images\chimpanzi.jpg" alt="Icon" class="icon-image">
+                <p class = "icon-label">brainrot.exe</p>
+            </div>
 
-            </main>
+            <div id = "window-1" class = "window">
 
-        </div>
+                <div class = "window-header">
+                    <span>SYSTEM_NOTIFICATION</span>
+                    <button onclick="this.parentElement.parentElement.style.display='none'">X</button>
+                </div>
 
-    </body>
+                <div class = "window-content">
+                    <p style="color: white;">You are brainrotted bro</p>
+                </div>
 
+            </div>
+
+        </main>
+
+    </div>
+    <script src="script.js"></script>
+</body>
 </html>

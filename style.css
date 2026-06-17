@@ -1,3 +1,11 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
 .os-container {
     width: 100vw;
     height: 100vh;
@@ -31,17 +39,65 @@
 }
 
 .icon {
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid #00ff41;
-    color: #00ff41;
-    text-align: center;
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 10px;
     cursor: pointer;
-    transition: transform 0.1s;
+    border: 1px solid transparent;
 }
 
 .icon:hover {
-    transform: rotate(2deg) scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px dotted #00ff41;
+}
+
+.icon-image {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    pointer-events: none;
+}
+
+.icon-label {
+    margin-top: 5px;
+    font-size: 12px;
+    color: white;
+    text-align: center;
+    word-break: break-all;
+}
+
+.clock {
+    animation: jitter 0.5s infinite;
+}
+
+@keyframes jitter {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(1px, -1px); }
+    100% { transform: translate(0, 0); }
+}
+
+.window {
+    position: absolute;
+    top: 150px;
+    left: 150px;
+    width: 300px;
+    background: #1a1a1a;
+    border: 2px solid #00ff41;
+    box-shadow: 5px 5px 0px #00ff41;
+    z-index: 9999;
+
+    display: none;
+}
+
+.window-header {
     background: #00ff41;
-    color: black
+    color: black;
+    padding: 5px;
+    cursor: grab;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
 }
