@@ -127,3 +127,18 @@ html, body {
     justify-content: space-between;
     font-weight: bold;
 }
+
+#note-textarea {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    background: #1a1a1a;
+    color: #00ff41;
+    border: 1px solid #00ff41;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
+    resize: none;
+    outline: none;
+    box-sizing: border-box;
+    padding: 10px;
+}

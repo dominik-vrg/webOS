@@ -14,7 +14,7 @@
 
         <nav class = "top-bar">
 
-            <div class = "settings">Settings</div>
+            <div class = "settings-button">Settings</div>
             <div class = "clock">currentTime</div>
             <div class = "status">currentDate</div>
 
@@ -22,9 +22,14 @@
             
         <main class="desktop">
 
-            <div class = "icon">
-                <img src="images\chimpanzi.jpg" alt="Icon" class="icon-image">
+            <div class = "icon" data-window="window-1">
+                <img src="images/chimpanzi.jpg" alt="Icon" class="icon-image">
                 <p class = "icon-label">brainrot.exe</p>
+            </div>
+            
+            <div class = "icon" data-window="window-2">
+                <img src="images/notepad.jpg" alt="Icon" class="icon-image">
+                <p class="icon-label">notepad</p>
             </div>
 
             <div id = "window-1" class = "window">
@@ -34,10 +39,20 @@
                     <button onclick="this.parentElement.parentElement.style.display='none'">X</button>
                 </div>
 
-                <div class = "window-content">
+                <div class = "window-content" style="padding: 0; align-items: stretch; justify-content: flex-start; min-height: 0;">
                     <p style="color: white;">You are brainrotted bro</p>
                 </div>
 
+            </div>
+
+            <div id="window-2" class="window" style="top: 150px; left: 200px;">
+                <div class="window-header">
+                    <span>NOTEPAD</span>
+                    <button onclick="this.parentElement.parentElement.style.display='none'">X</button>
+                </div>
+                <div class="window-content" style="padding: 10px; align-items: stretch; justify-items: stretch;">
+                    <textarea id="note-textarea" placeholder="type ur brainrot here..."></textarea>
+                </div>
             </div>
 
         </main>

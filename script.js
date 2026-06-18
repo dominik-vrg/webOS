@@ -91,9 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     icons.forEach(icon => {
         icon.addEventListener('dblclick', () => {
-            const targetWindow = document.getElementById('window-1');
+            const windowId = icon.dataset.window || 'window-1';
+            const targetWindow = document.getElementById(windowId);
             if (targetWindow) {
-                targetWindow.style.display = 'block';
+                targetWindow.style.display = 'flex';
                 targetWindow.style.zIndex = "1000";
             }
         });
