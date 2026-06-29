@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brainrot OS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -14,69 +17,142 @@
         <span class="boot-cursor">█</span>
     </div>
 
-    <div class = "os-container">
+    <div class="os-container" id="os-container">
 
-        <nav class = "top-bar">
+        <nav class="top-bar">
+            <div class="top-bar-left">
+                <button class="settings-button" id="settings-trigger" aria-label="Open Settings">⚙️ Settings</button>
+            </div>
 
-            <div class = "settings-button">Settings</div>
-            <div class = "clock">currentTime</div>
-            <div class = "status">currentDate</div>
+            <div class = top-bar-center>
+                <button class="spotlight-trigger" id="spotlight-trigger" aria-label="Search Apps">🔍 Search</button>
+            </div>
 
+            <div class="top-bar-right">
+                <div class="status-icons" aria-hidden="true">
+                    <span>📶</span><span>🔊</span><span>🔋67%</span>
+                </div>
+                <div class="clock">currentTime</div>
+                <div class="status">currentDate</div>
+            </div>
         </nav>
             
         <main class="desktop">
 
-            <div class = "icon" data-window="window-1">
-                <img src="images/chimpanzi.jpg" alt="Icon" class="icon-image">
-                <p class = "icon-label">brainrot.exe</p>
+            <div class="icon" data-window="window-1" tabindex="0">
+                <div class="icon-image icon-emoji">🧠</div>
+                <p class="icon-label">brainrot.exe</p>
             </div>
             
-            <div class = "icon" data-window="window-2">
-                <img src="images/notepad.jpg" alt="Icon" class="icon-image">
+            <div class = "icon" data-window="window-2" tabindex="0">
+                <div class="icon-image icon-emoji">📝</div>
                 <p class="icon-label">notepad</p>
             </div>
 
-            <div class="icon", data-window="window-3">
-                <img src="images/danger.png" alt="Icon" class="icon-image">
+            <div class="icon", data-window="window-3" tabindex="0">
+                <div class="icon-image icon-emoji">🛑</div>
                 <p class="icon-label">do not open</p>
             </div>
 
-            <div id = "window-1" class = "window">
+            <div class="icon" data-window="window-4" tabindex="0">
+                <div class="icon-image icon-emoji">🧮</div>
+                <p class="icon-label">calculator</p>
+            </div>
 
+            <div class="icon" data-window="window-5" tabindex="0">
+                <div class="icon-image icon-emoji">⚙️</div>
+                <p class="icon-label">settings</p>
+            </div>
+
+            <!-- window 1 -->
+            <div id = "window-1" class = "window">
                 <div class = "window-header">
                     <span>SYSTEM_NOTIFICATION</span>
-                    <button onclick="this.parentElement.parentElement.style.display='none'">X</button>
+                    <div class="traffic-lights">
+                        <button class="traffic-light minimize" aria-label="minimize"></button>
+                        <button class="traffic-light maximize" aria-label="maximize"></button>
+                        <button class="traffic-light close" aria-label="close"></button>
+                    </div>
                 </div>
-
                 <div class = "window-content" style="padding: 0; align-items: stretch; justify-content: flex-start; min-height: 0;">
                     <p style="color: white;">You are brainrotted bro</p>
                 </div>
-
             </div>
 
+            <!-- window 2 -->
             <div id="window-2" class="window" style="top: 150px; left: 200px;">
-
                 <div class="window-header">
                     <span>NOTEPAD</span>
-                    <button onclick="this.parentElement.parentElement.style.display='none'">X</button>
+                    <div class="traffic-lights">
+                        <button class="traffic-light minimize" aria-label="minimize"></button>
+                        <button class="traffic-light maximize" aria-label="maximize"></button>
+                        <button class="traffic-light close" aria-label="close"></button>
+                    </div>
                 </div>
-
                 <div class="window-content" style="padding: 10px; align-items: stretch; justify-items: stretch;">
                     <textarea id="note-textarea" placeholder="type ur brainrot here..."></textarea>
                 </div>
-
             </div>
 
+            <!-- window 3 -->
             <div id="window-3" class="window" style="top: 200px; left: 250px; width: 420px; height: 280px;">
                 <div class="window-header">
                     <span>DO_NOT_OPEN.EXE</span>
-                    <button onclick="this.parentElement.parentElement.style.display='none'">X</button>
+                    <div class="traffic-lights">
+                        <button class="traffic-light minimize" aria-label="minimize"></button>
+                        <button class="traffic-light maximize" aria-label="maximize"></button>
+                        <button class="traffic-light close" aria-label="close"></button>
+                    </div>
                 </div>
                 <div class="window-content">
                     <button id="dont-click-btn" class="dont-click-btn">DO NOT CLICK</button>
                 </div>
             </div>
 
+            <!-- window 4 -->
+             <div id="window-4" class="window calculator-window" style="top: 120px; left: 420px; width: 300px; height: 420px;">
+                <div class="window-header">
+                    <span>CALCULATOR</span>
+                    <div class="traffic-lights">
+                        <button class="traffic-light minimize" aria-label="minimize"></button>
+                        <button class="traffic-light maximize" aria-label="maximize"></button>
+                        <button class="traffic-light close" aria-label="close"></button>
+                    </div>
+                </div>
+                <div class="window-content calc-content">
+                    <div class="calc-display" id="calc-display">0</div>
+                    <div class="calc-grid">
+                        <button class="calc-btn" data-value="C">C</button>
+                        <button class="calc-btn" data-value="back">⌫</button>
+                        <button class="calc-btn op" data-value="%">%</button>
+                        <button class="calc-btn op" data-value="/">÷</button>
+ 
+                        <button class="calc-btn" data-value="7">7</button>
+                        <button class="calc-btn" data-value="8">8</button>
+                        <button class="calc-btn" data-value="9">9</button>
+                        <button class="calc-btn op" data-value="*">×</button>
+ 
+                        <button class="calc-btn" data-value="4">4</button>
+                        <button class="calc-btn" data-value="5">5</button>
+                        <button class="calc-btn" data-value="6">6</button>
+                        <button class="calc-btn op" data-value="-">−</button>
+ 
+                        <button class="calc-btn" data-value="1">1</button>
+                        <button class="calc-btn" data-value="2">2</button>
+                        <button class="calc-btn" data-value="3">3</button>
+                        <button class="calc-btn op" data-value="+">+</button>
+ 
+                        <button class="calc-btn" data-value="0">0</button>
+                        <button class="calc-btn" data-value=".">.</button>
+                        <button class="calc-btn equals" data-value="=" style="grid-column: span 2;">=</button>
+                    </div>
+                </div>
+             </div>
+
+            <!-- window 5 -->
+            <div id="window-5", class="window settings-window" style="top: 90px; left: 340px; width: 480px; height: 440px;">
+            <!-- to be continued -->
+            </div>
         </main>
 
     </div>
