@@ -1,5 +1,127 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    //settings
+
+    const storageKey = 'brainrotOS.settings'
+
+    const defaultSettings = {
+        accent: '#00ff41',
+        wallpaper: 'default',
+        sound: false,
+        reduceMotion: false,
+        showBoot: true
+    };
+
+    const wallpapers = {
+        default: { a: '#5500ff', b: '#000000' },
+        sunset: { a: '#ff5500', b: '#1a0000' },
+        matrix: { a: '#003300', b: '#000000' },
+        deepsea: { a: '#0044ff', b: '#000010' }
+    };
+
+    function loadSettings() {
+        try {
+            const raw = localStorage.getItem(storageKey);
+            if (!raw) return { ...defaultSettings };
+            return { ...defaultSettings, ...JSON.parse(raw) };
+        } catch (e) {
+            return { ...defaultSettings }
+        }
+    }
+
+    function saveSettings() {
+        try {
+            localStorage.setItem(storageKey, JSON.stringify(settings));
+        } catch (e) {
+            // storage unavailable right now
+        }
+    }
+
+    const settings = loadSettings();
+
+    function applyAccent(hex) {
+        document.documentElement.style.setProperty('-accent', hex);
+        document.querySelectorAll('.swatch').forEach(sw => {
+            sw.classList.toggle('active', sw.style.background === hexToRgbMatch(hex) || sw.getAttribute('style')?.includes(hex));
+        });
+    }
+
+    function hexToRgbMatch(hex) {
+        return hex;
+    }
+
+    function applyWallpaper(hex) {
+        const wp = wallpaper[name] || wallpapers.default;
+        document.documentElement.style.setProperty('--wp-a', wp.a);
+        document.documentElement.style.setProperty('--wp-b', wp.b);
+        document.querySelectorAll('.wallpaper-swatch').forEach(sw => {
+            sw.classList.toggle('active', sw.dataset.wallpaper === name);
+        });
+    }
+
+    function applyReduceMotion(on) {
+        document.documentElement.classList.toggle('reduce-motion', on);
+        const toggle = document.getElementById('motion-toggle');
+        if (toggle) toggle.checked = on;
+    }
+
+    function applySoundToggleUI(on) {
+        const toggle = document.getElementById('sound-toggle');
+        if (toggle) toggle.checked = on;
+    }
+
+    function applyBootToggleUI(on) {
+        const toggle = document.getElementById('boot-toggle');
+        if (toggle) toggle.checked = on;
+    }
+
+    function markActiveAccentSwatch(hex) {
+        document.querySelectorAll('.swatch').forEach(sw => {
+            const swHex = (sw.getAttribute('style') || '').match(/#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})/);
+            sw.classList.toggle('active', swHex && ('#' + swHex[1]).toLowerCase() === hex.toLowerCase());
+        });
+    }
+
+    function applyAllSettings() {
+        document.documentElement.style.setProperty('--accent', settings.accent);
+        markActiveAccentSwatch(settings.accent);
+        applyWallpaper(settings.wallpaper);
+        applyReduceMotion(settings.reduceMotion);
+        applySoundToggleUI(settings.sound);
+        applyBootToggleUI(settings.showBoot);
+    }
+
+    applyAllSettings();
+
+    //sounds
+
+    let audioCtx = null;
+
+    function beep(freq = 440, duration = 0.06, type = 'square', volume = 0.04) {
+        if (!settings.sound) return;
+        try {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.value = freq;
+            gain.gain.value = volume;
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        } catch (e) {
+            //ignore, unavailable audio
+        }
+    }
+
+    const sounds = {
+        open: () => beep(660, 0.07, 'square'),
+        close: () => beep(220, 0.08, 'square'),
+        click: () => beep(880, 0.04, 'square'),
+        key: () => beep(440, 0.03, 'square')
+    };
+
     //boot screen
     const bootLines = [
         "BRAINROT OS v67.420",
@@ -22,45 +144,46 @@ document.addEventListener('DOMContentLoaded', () => {
         "SYSTEM READY. WELCOME BACK KING 👑",
         "",
         "Starting desktop environment..."
-    ]
+    ];
 
     const bootScreen = document.getElementById('boot-screen');
     const bootTextEl = document.getElementById('boot-text');
     const bootCursor = document.querySelector('.boot-cursor');
 
     if (bootScreen && bootTextEl) {
-        let lineIndex = 0;
+        if (!settings.showBoot) {
+            bootScreen.style.display = 'none';
+        } else {
+            let lineIndex = 0;
 
-        function showNextLine() {
-            if (lineIndex < bootLines.length) {
-                bootTextEl.textContent += bootLines[lineIndex] + '\n';
-                lineIndex++
-                const line = bootLines[lineIndex - 1];
-                const delay = line === '' ? 180 : Math.random() * 90 + 60;
-                setTimeout(showNextLine, delay);
-            } else {
-                if (bootCursor) bootCursor.style.display = 'none';
-                setTimeout(() => {
-                    bootScreen.style.opacity = '0';
+            function showNextLine() {
+                if (lineIndex < bootLines.length) {
+                    bootTextEl.textContent += bootLines[lineIndex] + '\n';
+                    lineIndex++
+                    const line = bootLines[lineIndex - 1];
+                    const delay = line === '' ? 180 : Math.random() * 90 + 60;
+                    setTimeout(showNextLine, delay);
+                } else {
+                    if (bootCursor) bootCursor.style.display = 'none';
                     setTimeout(() => {
-                        bootScreen.style.display = 'none';
-                    }, 800);
-                }, 1000);
+                        bootScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            bootScreen.style.display = 'none';
+                        }, 800);
+                    }, 1000);
+                }
             }
-        }
 
-        showNextLine();
+            showNextLine();
+        }
     }
         
     // clock function
     function UpdateClock() {
         const now = new Date();
         const timeString = now.toLocaleTimeString('en-US');
-
         const clockElement = document.querySelector('.clock');
-        if (clockElement) {
-            clockElement.innerText = timeString;
-        }
+        if (clockElement) clockElement.innerText = timeString;
     }
 
     UpdateClock();
@@ -76,20 +199,108 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const statusElement = document.querySelector('.status');
-        if (statusElement) {
-            statusElement.innerText = dateString;
-        }
+        if (statusElement) statusElement.innerText = dateString;
     }
 
     UpdateDate();
     setInterval(UpdateDate, 1000 * 60 * 60);
 
-    //draggable windows
+    //uptime in about panel
+
+    const sessionStart = Date.now();
+
+    function updateUptime() {
+        const el = document.getElementById('uptime-display');
+        if (!el) return;
+        const elapsed = Math.floor((Date.not() - sessionStart) /1000);
+        const m = Math.floor(elapsed / 60);
+        const s = elapsed % 60
+        el.textContent = 'Brainrot Uptime: ${m}m ${s}s'
+    }
+
+    updateUptime();
+    setInterval(updateUptime, 1000);
+
+    //window manager
+
     const allWindows = document.querySelectorAll('.window');
+
+    function bringToFront(win) {
+        allWindows.forEach(w => { w.style.zIndex = '100'; });
+        win.style.zIndex = '1000';
+    }
+
+    function isOpen(win) {
+        return win.style.display === 'flex';
+    }
+
+    function setDockRunning(windowId, running) {
+        document.querySelectorAll(`.dock-icon[data-window="$[windowId]"]`).forEach(d => {
+            d.classList.toggle('running', running);
+        });
+    }
+
+    function openWindow(windowId) {
+        const win = document.getElementById(windowId);
+        if (!win) return;
+        const wasOpen = isOpen(win);
+        win.style.display = 'flex';
+        bringToFront(win);
+        setDockRunning(windowId, true);
+        if (!wasOpen) sounds.open();
+    }
+ 
+    function closeWindow(win) {
+        win.style.display = 'none';
+        win.classList.remove('maximized');
+        setDockRunning(win.id, false);
+        sounds.close();
+    }
+
+    function toggleMaximize(win) {
+        win.classList.toggle('maximized');
+    }
+
+    function dockIconClicked(windowId) {
+        const win = document.getElementById(windowId);
+        if (!win) return;
+        sounds.click();
+
+        if (!isOpen(win)) {
+            openWindow(windowId);
+            return;
+        }
+
+        const isFrontmost = parseInt(win.style.zIndex || '100', 10) >= 1000;
+        if (isFrontmost) {
+            win.style.display = 'flex';
+            bringToFront(win);
+        }
+    }
 
     allWindows.forEach(win => {
         const header = win.querySelector('.window-header')
         if (!header) return;
+
+        const closeBtn = win.querySelector('.traffic-light.close');
+        const minBtn = win.querySelector('.traffic-light.minimize');
+        const maxBtn = win.querySelector('.traffic-light.maximize');
+
+        if (closeBtn) closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeWindow(win);
+        });
+        if (minBtn) minBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            win.style.display = 'none';
+            sound.close();
+        });
+        if (maxBtn) maxBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMaximize(win);
+        });
+
+        win.addEventListener('mousedown', () => bringToFront(win));
 
         let isDragging = false;
         let currentX = 0;
@@ -104,8 +315,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('mouseup', dragEnd);
 
         function dragStart(e) {
-            allWindows.forEach(w => w.style.zIndex = "100");
-            win.style.zIndex = "1000";
+            if (e.target.closest('.traffic-light')) return;
+            if (win.classList.contains('maximized')) return;
+
+            bringToFront(win);
 
             initialX = e.clientX - xOffset;
             initialY = e.clientY - yOffset;
@@ -137,6 +350,10 @@ document.addEventListener('DOMContentLoaded', () => {
             header.style.cursor = 'grab';
         }
     });
+
+
+/* TO BE CONTINUED HERE */
+
 
     //doubleclick
     const icons = document.querySelectorAll('.icon');
